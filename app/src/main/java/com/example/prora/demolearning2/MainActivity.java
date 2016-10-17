@@ -21,11 +21,12 @@ public class MainActivity extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		getRuntimePermission();
+		BackupTemplate backupTemplate = new BackupContact(this);
+		backupTemplate.backup();
 	}
 
 	@TargetApi(23)
 	public void getRuntimePermission() {
-		
 		int permissionContactCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CONTACTS);
 		int permissionSmsCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_SMS);
 		int permissionStorageCheck = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);

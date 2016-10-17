@@ -14,5 +14,19 @@ import android.widget.Toast;
 
 public abstract class BackupTemplate {
 
+	Context context;
+
+	public BackupTemplate(Context context) {
+		this.context = context;
+	}
+
+	public final void backup(){
+		getData();
+		writeDataToFile();
+	}
+
+	abstract void getData();
+
+	abstract void writeDataToFile();
 
 }
