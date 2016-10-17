@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
 					||ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_SMS)
 					||ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)){
 				MaterialFacade.getInstance().showDialogNeedPermission(this, "Permission required", "We need " +
-						"permission to backup contact + sms, pls turn app on again");
+						"permission to backup contact + sms, pls go to setting and set permission for us");
 			}else {
 				ArrayList<String> listPermission = new ArrayList<>();
 				if(permissionDenied(permissionContactCheck))listPermission.add(Manifest.permission.READ_CONTACTS);
