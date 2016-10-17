@@ -2,8 +2,12 @@ package com.example.prora.demolearning2;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 
+import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.afollestad.materialdialogs.folderselector.FileChooserDialog;
 
@@ -12,6 +16,7 @@ import com.afollestad.materialdialogs.folderselector.FileChooserDialog;
  */
 
 public class MaterialFacade {
+	private static final String TAG = MaterialFacade.class.getName();
 	private static MaterialFacade instance;
 
 	private MaterialFacade() {
@@ -41,6 +46,29 @@ public class MaterialFacade {
 				.autoDismiss(false)
 				.canceledOnTouchOutside(false)
 				.cancelable(false)
+				.show();
+	}
+
+	public MaterialDialog showDialogNeedPermission(final Context context, String title, final String content){
+		return new MaterialDialog.Builder(context)
+				.title(title)
+				.content(content)
+				.autoDismiss(false)
+				.canceledOnTouchOutside(false)
+				.dismissListener(new DialogInterface.OnDismissListener() {
+					@Override
+					public void onDismiss(DialogInterface dialog) {
+						Log.d(TAG, "onDismiss: ");
+						System.exit(0);
+					}
+				})
+				.positiveText("Ok")
+				.onPositive(new MaterialDialog.SingleButtonCallback() {
+					@Override
+					public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+						dialog.dismiss();
+					}
+				})
 				.show();
 	}
 }
