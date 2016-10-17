@@ -21,8 +21,6 @@ public class MainActivity extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		getRuntimePermission();
-		BackupTemplate backupTemplate = new BackupContact(this);
-		backupTemplate.backup();
 	}
 
 	@TargetApi(23)
