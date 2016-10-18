@@ -26,8 +26,6 @@ import java.io.Serializable;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
-	IStrategy strategy;
-
 	private final int PERMISSION_REQUEST = 1;
 
 	@Override
@@ -46,13 +44,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 		Intent intent = new Intent(MainActivity.this, Main2Activity.class);
 		switch (id){
 			case R.id.btnContact:
-				strategy = new ContactStrategy();
-				intent.putExtra(getResources().getString(R.string.strategy), (Serializable) strategy);
+				intent.putExtra("Strategy", "contact");
 				startActivity(intent);
 				break;
 			case R.id.btnSms:
-				strategy = new SmsStrategy();
-				intent.putExtra(getResources().getString(R.string.strategy), (Serializable) strategy);
+				intent.putExtra("Strategy", "sms");
 				startActivity(intent);
 				break;
 			default:

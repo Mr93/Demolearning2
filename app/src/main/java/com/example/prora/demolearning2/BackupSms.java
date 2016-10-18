@@ -29,9 +29,16 @@ public class BackupSms extends BackupTemplate {
 	MaterialDialog progressDialog;
 	int maxSms;
 
-	public BackupSms(Context context) {
+	private static BackupSms instance;
+	private BackupSms(Context context) {
 		super(context);
 		fileName = "Sms.xml";
+	}
+	public static BackupSms getInstance(Context context){
+		if (instance == null){
+			instance = new BackupSms(context);
+		}
+		return instance;
 	}
 
 	@Override

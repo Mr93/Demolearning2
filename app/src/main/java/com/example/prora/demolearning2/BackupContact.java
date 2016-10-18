@@ -32,10 +32,17 @@ public class BackupContact extends BackupTemplate {
 
 	//http://stackoverflow.com/questions/38872165/how-to-create-a-folder-for-backup-contacts-in-android
 	private static final String TAG = BackupContact.class.getName();
-
-	public BackupContact(Context context) {
+	private static BackupContact instance;
+	private BackupContact(Context context) {
 		super(context);
 		fileName = "Contacts.vcf";
+	}
+
+	public static BackupContact getInstance(Context context){
+		if (instance == null){
+			instance = new BackupContact(context);
+		}
+		return instance;
 	}
 
 	@Override
