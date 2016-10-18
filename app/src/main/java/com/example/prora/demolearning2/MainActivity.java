@@ -2,13 +2,18 @@ package com.example.prora.demolearning2;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Toast;
+
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 
 import java.util.ArrayList;
 
@@ -21,8 +26,6 @@ public class MainActivity extends AppCompatActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		getRuntimePermission();
-		BackupTemplate backupTemplate = new BackupContact(this);
-		backupTemplate.backup();
 	}
 
 	@TargetApi(23)
@@ -35,7 +38,8 @@ public class MainActivity extends AppCompatActivity {
 			if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_CONTACTS)
 					||ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_SMS)
 					||ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)){
-				Toast.makeText(this, "need permission", Toast.LENGTH_SHORT).show();
+				MaterialFacade.getInstance().showDialogNeedPermission(this, "Permission required", "We need " +
+						"permission to backup contact + sms, pls go to setting and set permission for us");
 			}else {
 				ArrayList<String> listPermission = new ArrayList<>();
 				if(permissionDenied(permissionContactCheck))listPermission.add(Manifest.permission.READ_CONTACTS);
