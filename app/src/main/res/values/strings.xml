@@ -5,4 +5,5 @@
     <string name="contact">Contact</string>
     <string name="Sms">SMS</string>
     <string name="strategy">Strategy</string>
+    <string name="action">Action</string>
 </resources>
