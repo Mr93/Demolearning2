@@ -26,7 +26,6 @@ import java.io.StringWriter;
 public class BackupSms extends BackupTemplate {
 
 	Cursor sCursor;
-	MaterialDialog progressDialog;
 	int maxSms;
 
 	public BackupSms(Context context) {
@@ -48,7 +47,7 @@ public class BackupSms extends BackupTemplate {
 		if(sCursor != null){
 			sCursor.moveToFirst();
 			maxSms = sCursor.getCount();
-			progressDialog = MaterialFacade.getInstance().getDeterminateProgressDialogs(context, maxSms, "Backup Sms");
+			MaterialFacade.getInstance().getDeterminateProgressDialogs(context, maxSms, "Backup Sms");
 			new backupAsyncTask().execute();
 		}
 	}
@@ -153,15 +152,14 @@ public class BackupSms extends BackupTemplate {
 		@Override
 		protected void onPostExecute(String s) {
 			super.onPostExecute(s);
-			progressDialog.setContent(s);
-			progressDialog.setCancelable(true);
+			MaterialFacade.getInstance().finishDeterminateProgressDialogs(s);
 		}
 
 		@Override
 		protected void onProgressUpdate(Integer... values) {
 			super.onProgressUpdate(values);
 			Log.d("check_value"," " + values[0]);
-			progressDialog.setProgress(values[0]);
+			MaterialFacade.getInstance().updateDeterminateProgressDialogs(values[0]);
 		}
 	}
 }

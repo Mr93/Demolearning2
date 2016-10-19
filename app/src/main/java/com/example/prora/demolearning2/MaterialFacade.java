@@ -19,6 +19,7 @@ import com.afollestad.materialdialogs.folderselector.FileChooserDialog;
 public class MaterialFacade {
 	private static final String TAG = MaterialFacade.class.getName();
 	private static MaterialFacade instance;
+	private MaterialDialog materialDialog;
 
 	private MaterialFacade() {
 
@@ -39,8 +40,8 @@ public class MaterialFacade {
 				.show();
 	}
 
-	public MaterialDialog getDeterminateProgressDialogs(Context context, int max, String title){
-		return new MaterialDialog.Builder(context)
+	public void getDeterminateProgressDialogs(Context context, int max, String title){
+		materialDialog = new MaterialDialog.Builder(context)
 				.title(title)
 				.content("Loading")
 				.progress(false, max, true)
@@ -50,8 +51,17 @@ public class MaterialFacade {
 				.show();
 	}
 
-	public MaterialDialog showDialogNeedPermission(final Context context, String title, final String content){
-		return new MaterialDialog.Builder(context)
+	public void updateDeterminateProgressDialogs(final int progress){
+		materialDialog.setProgress(progress);
+	}
+
+	public void finishDeterminateProgressDialogs(String value){
+		materialDialog.setContent(value);
+		materialDialog.setCancelable(true);
+	}
+
+	public void showDialogNeedPermission(final Context context, String title, final String content){
+		materialDialog = new MaterialDialog.Builder(context)
 				.title(title)
 				.content(content)
 				.autoDismiss(false)
