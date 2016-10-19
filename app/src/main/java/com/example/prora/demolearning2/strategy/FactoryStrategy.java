@@ -16,7 +16,12 @@ public class FactoryStrategy {
 		if (instance == null) {
 			instance = new FactoryStrategy(context);
 		}
+		instance.setContext(context);
 		return instance;
+	}
+
+	public void setContext(Context context) {
+		this.context = context;
 	}
 
 	public IStrategy getStrategy(String type){

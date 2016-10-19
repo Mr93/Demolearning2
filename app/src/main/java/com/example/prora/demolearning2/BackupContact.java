@@ -24,17 +24,16 @@ import java.util.ArrayList;
 
 public class BackupContact extends BackupTemplate {
 
-
 	ArrayList<String> lCheck;
 	MaterialDialog progressDialog;
 	Cursor phones;
-
+	Context context;
 
 	//http://stackoverflow.com/questions/38872165/how-to-create-a-folder-for-backup-contacts-in-android
 	private static final String TAG = BackupContact.class.getName();
 	private static BackupContact instance;
 	private BackupContact(Context context) {
-		super(context);
+		super();
 		fileName = "Contacts.vcf";
 	}
 
@@ -42,7 +41,12 @@ public class BackupContact extends BackupTemplate {
 		if (instance == null){
 			instance = new BackupContact(context);
 		}
+		instance.setContext(context);
 		return instance;
+	}
+
+	public void setContext(Context context) {
+		this.context = context;
 	}
 
 	@Override

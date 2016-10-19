@@ -19,10 +19,8 @@ public abstract class BackupTemplate {
 
 	String fileName = "";
 	String filePath = Environment.getExternalStorageDirectory().getAbsolutePath();
-	Context context;
 
-	public BackupTemplate(Context context) {
-		this.context = context;
+	public BackupTemplate() {
 	}
 
 	public final void backup(){
