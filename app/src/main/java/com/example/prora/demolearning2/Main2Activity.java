@@ -25,9 +25,9 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
 		String key_strategy = getResources().getString(R.string.strategy);
 		if (intent.hasExtra(key_strategy)){
 			String type = intent.getStringExtra("Strategy");
-			if (type.equals("contact")){
+			if (type.equals("Contacts")){
 				strategy = new ContactStrategy(this);
-			}else if (type.equals("sms")){
+			}else if (type.equals("Sms")){
 				strategy = new SmsStrategy(this);
 			}
 			if (strategy != null){
