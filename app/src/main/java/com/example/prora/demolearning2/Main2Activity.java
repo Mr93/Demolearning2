@@ -8,16 +8,15 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import com.example.prora.demolearning2.adapter.List2Line;
 import com.example.prora.demolearning2.adapter.List2LineAdapter;
-import com.example.prora.demolearning2.strategy.ContactStrategy;
+import com.example.prora.demolearning2.strategy.FactoryStrategy;
 import com.example.prora.demolearning2.strategy.IStrategy;
-import com.example.prora.demolearning2.strategy.SmsStrategy;
+import com.example.prora.demolearning2.strategy.NullStrategy;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Main2Activity extends AppCompatActivity implements View.OnClickListener{
+public class Main2Activity extends AppCompatActivity{
 
-	IStrategy strategy;
+	IStrategy strategy = new NullStrategy();
 	ListView listViewMain;
 	List2LineAdapter list2LineAdapter;
 	ArrayList<List2Line> list2Lines;
@@ -33,19 +32,12 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main2);
-		findViewById(R.id.btnBackup).setOnClickListener(this);
-		findViewById(R.id.btnView).setOnClickListener(this);
 
 		Intent intent = getIntent();
 		String key_strategy = getResources().getString(R.string.strategy);
 		if (intent.hasExtra(key_strategy)){
 			type = intent.getStringExtra("Strategy");
-
-			if (type.equals("Contacts")){
-				strategy = new ContactStrategy(this);
-			}else if (type.equals("Sms")){
-				strategy = new SmsStrategy(this);
-			}
+			strategy = FactoryStrategy.getInstance(this).getStrategy(type);
 			if (strategy != null){
 				setTitle(strategy.getName());
 				for (int i = 0; i< summary.length; i++) {
@@ -85,18 +77,4 @@ public class Main2Activity extends AppCompatActivity implements View.OnClickList
 		return list2Lines;
 	}
 
-	@Override
-	public void onClick(View view) {
-		int id = view.getId();
-		switch (id){
-			case R.id.btnBackup:
-				strategy.backup();
-				break;
-			case R.id.btnView:
-				strategy.view();
-				break;
-			default:
-				break;
-		}
-	}
 }

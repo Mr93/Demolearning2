@@ -18,7 +18,7 @@ import com.example.prora.demolearning2.adapter.List2LineAdapter;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+public class MainActivity extends AppCompatActivity {
 
 	private final int PERMISSION_REQUEST = 1;
 	ListView listViewMain;
@@ -38,8 +38,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		getRuntimePermission();
-		findViewById(R.id.btnContact).setOnClickListener(this);
-		findViewById(R.id.btnSms).setOnClickListener(this);
 		listViewMain = (ListView) findViewById(R.id.listViewFirstActivity);
 		list2LineAdapter = new List2LineAdapter(MainActivity.this,R.layout.item_list_two_line_text_app,0,getContentList());
 		listViewMain.setAdapter(list2LineAdapter);
@@ -59,25 +57,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 			list2Lines.add(new List2Line(label[i],summary[i], idImageview[i]));
 		}
 		return list2Lines;
-	}
-
-	@Override
-	public void onClick(View view) {
-		//Doan nay se get ra concreate Strategy sau
-		int id = view.getId();
-		Intent intent = new Intent(MainActivity.this, Main2Activity.class);
-		switch (id){
-			case R.id.btnContact:
-				intent.putExtra("Strategy", "contacts");
-				startActivity(intent);
-				break;
-			case R.id.btnSms:
-				intent.putExtra("Strategy", "sms");
-				startActivity(intent);
-				break;
-			default:
-				break;
-		}
 	}
 
 	@TargetApi(23)

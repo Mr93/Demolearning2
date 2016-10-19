@@ -27,18 +27,4 @@
             android:layout_height="match_parent"
             android:id="@+id/listViewFirstActivity"/>
 
-    <Button
-            android:layout_width="wrap_content"
-            android:text="@string/backup"
-            android:id="@+id/btnBackup"
-            android:layout_alignParentRight="true"
-            android:layout_above="@+id/btnView"
-            android:layout_height="wrap_content"/>
-    <Button
-            android:layout_width="wrap_content"
-            android:id="@+id/btnView"
-            android:text="@string/view"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentBottom="true"
-            android:layout_height="wrap_content"/>
 </RelativeLayout>
