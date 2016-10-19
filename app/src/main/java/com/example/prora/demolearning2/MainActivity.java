@@ -2,62 +2,61 @@ package com.example.prora.demolearning2;
 
 import android.Manifest;
 import android.annotation.TargetApi;
-import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ListView;
 import android.widget.Toast;
-
-import com.afollestad.materialdialogs.DialogAction;
-import com.afollestad.materialdialogs.MaterialDialog;
+import com.example.prora.demolearning2.adapter.List2Line;
+import com.example.prora.demolearning2.adapter.List2LineAdapter;
 
 import java.util.ArrayList;
-import android.view.View;
-import com.example.prora.demolearning2.strategy.ContactStrategy;
-import com.example.prora.demolearning2.strategy.IStrategy;
-import com.example.prora.demolearning2.strategy.SmsStrategy;
 
-import java.io.Serializable;
-
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
-
-	IStrategy strategy;
+public class MainActivity extends AppCompatActivity {
 
 	private final int PERMISSION_REQUEST = 1;
+	ListView listViewMain;
+	List2LineAdapter list2LineAdapter;
+	ArrayList<List2Line> list2Lines;
+	String[] label = {"Contacts","Sms"};
+	String[] summary = {"Backup and restore your contacts",
+			"Backup and restore your sms"};
+	int[] idImageview = {
+			R.drawable.ic_contact_mail_black_48dp,
+			R.drawable.ic_message_text_black_48dp
+	};
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		getRuntimePermission();
-		findViewById(R.id.btnContact).setOnClickListener(this);
-		findViewById(R.id.btnSms).setOnClickListener(this);
+		listViewMain = (ListView) findViewById(R.id.listViewFirstActivity);
+		list2LineAdapter = new List2LineAdapter(MainActivity.this,R.layout.item_list_two_line_text_app,0,getContentList());
+		listViewMain.setAdapter(list2LineAdapter);
+		listViewMain.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+				Intent intent = new Intent(MainActivity.this, Main2Activity.class);
+				intent.putExtra("Strategy", label[position]);
+				startActivity(intent);
+			}
+		});
 	}
 
-	@Override
-	public void onClick(View view) {
-		//Doan nay se get ra concreate Strategy sau
-		int id = view.getId();
-		Intent intent = new Intent(MainActivity.this, Main2Activity.class);
-		switch (id){
-			case R.id.btnContact:
-				strategy = new ContactStrategy();
-				intent.putExtra(getResources().getString(R.string.strategy), (Serializable) strategy);
-				startActivity(intent);
-				break;
-			case R.id.btnSms:
-				strategy = new SmsStrategy();
-				intent.putExtra(getResources().getString(R.string.strategy), (Serializable) strategy);
-				startActivity(intent);
-				break;
-			default:
-				break;
+	private ArrayList<List2Line> getContentList (){
+		list2Lines = new ArrayList<>();
+		for(int i = 0;i<label.length;i++){
+			list2Lines.add(new List2Line(label[i],summary[i], idImageview[i]));
 		}
+		return list2Lines;
 	}
 
 	@TargetApi(23)
