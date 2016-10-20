@@ -25,7 +25,6 @@ import java.util.ArrayList;
 public class BackupContact extends BackupTemplate {
 
 	ArrayList<String> lCheck;
-	MaterialDialog progressDialog;
 	Cursor phones;
 	Context context;
 
@@ -70,7 +69,7 @@ public class BackupContact extends BackupTemplate {
 	@Override
 	protected void writeDataToFile() {
 		if(phones!=null){
-			progressDialog = MaterialFacade.getInstance().getDeterminateProgressDialogs(context, phones.getCount(), "Backup contact");
+			MaterialFacade.getInstance().getDeterminateProgressDialogs(context, phones.getCount(), "Backup contact");
 			new BackupAsync().execute();
 		}
 	}
@@ -137,14 +136,13 @@ public class BackupContact extends BackupTemplate {
 		@Override
 		protected void onPostExecute(String s) {
 			super.onPostExecute(s);
-			progressDialog.setContent(s);
-			progressDialog.setCancelable(true);
+			MaterialFacade.getInstance().finishDeterminateProgressDialogs(s);
 		}
 
 		@Override
 		protected void onProgressUpdate(Integer... values) {
 			super.onProgressUpdate(values);
-			progressDialog.setProgress(values[0]);
+			MaterialFacade.getInstance().updateDeterminateProgressDialogs(values[0]);
 		}
 	}
 
