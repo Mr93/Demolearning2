@@ -1,18 +1,15 @@
-package com.example.prora.demolearning2.strategy;
+package com.example.prora.demolearning2.state;
 
 import android.content.Context;
 import android.util.Log;
 
-import com.example.prora.demolearning2.BackupContact;
 import com.example.prora.demolearning2.BackupSms;
 
-import java.io.Serializable;
-
-public class SmsStrategy implements IStrategy {
+public class SmsState implements IState {
 
     Context context;
 
-    public SmsStrategy(Context context){
+    public SmsState(Context context){
         this.context = context;
     }
 

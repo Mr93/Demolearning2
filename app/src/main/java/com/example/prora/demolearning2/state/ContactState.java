@@ -1,18 +1,16 @@
-package com.example.prora.demolearning2.strategy;
+package com.example.prora.demolearning2.state;
 
 import android.content.Context;
 import android.util.Log;
 
 import com.example.prora.demolearning2.BackupContact;
 
-import java.io.Serializable;
 
-
-public class ContactStrategy implements IStrategy {
+public class ContactState implements IState {
 
 	Context context;
 
-	public ContactStrategy(Context context){
+	public ContactState(Context context){
 		this.context = context;
 	}
 

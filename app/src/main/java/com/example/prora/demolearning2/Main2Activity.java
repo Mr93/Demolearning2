@@ -3,25 +3,29 @@ package com.example.prora.demolearning2;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.example.prora.demolearning2.adapter.List2Line;
 import com.example.prora.demolearning2.adapter.List2LineAdapter;
-import com.example.prora.demolearning2.strategy.FactoryStrategy;
-import com.example.prora.demolearning2.strategy.IStrategy;
-import com.example.prora.demolearning2.strategy.NullStrategy;
+import com.example.prora.demolearning2.state.FactoryState;
+import com.example.prora.demolearning2.state.IState;
+import com.example.prora.demolearning2.state.NullState;
 
 import java.util.ArrayList;
 
 public class Main2Activity extends AppCompatActivity{
 
-	IStrategy strategy = new NullStrategy();
+	IState state = new NullState();
 	ListView listViewMain;
 	List2LineAdapter list2LineAdapter;
 	ArrayList<List2Line> list2Lines;
 	String[] label = {"Backup","View"};
 	String[] summary = {"Backup", "View"};
+	String[] rootSummary = {"Backup", "View"};
 	int[] idImageview = {
 		R.drawable.ic_backup_black_24dp,
 		R.drawable.ic_visibility_black_24dp
@@ -34,19 +38,28 @@ public class Main2Activity extends AppCompatActivity{
 		setContentView(R.layout.activity_main2);
 
 		Intent intent = getIntent();
-		String key_strategy = getResources().getString(R.string.strategy);
-		if (intent.hasExtra(key_strategy)){
-			type = intent.getStringExtra("Strategy");
-			strategy = FactoryStrategy.getInstance(this).getStrategy(type);
-			if (strategy != null){
-				setTitle(strategy.getName());
-				for (int i = 0; i< summary.length; i++) {
-					summary[i] = summary[i] + " your " + type;
-				}
-			}
+		String key_state = getResources().getString(R.string.state);
+		if (intent.hasExtra(key_state)){
+			type = intent.getStringExtra(key_state);
+			state = getState(type);
+			updateLayoutWithState();
 		}
 		initListview();
 	}
+
+	private IState getState(String type) {
+		return FactoryState.getInstance(this).getState(type);
+	}
+
+	private void updateLayoutWithState() {
+		if (state != null){
+			setTitle(state.getName());
+			for (int i = 0; i< summary.length; i++) {
+				summary[i] = rootSummary[i] + " your " + type;
+			}
+		}
+	}
+
 
 	public void initListview() {
 		listViewMain = (ListView) findViewById(R.id.listViewFirstActivity);
@@ -57,10 +70,10 @@ public class Main2Activity extends AppCompatActivity{
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				switch (position){
 					case 0:
-						strategy.backup();
+						state.backup();
 						break;
 					case 1:
-						strategy.view();
+						state.view();
 						break;
 					default:
 						break;
@@ -77,4 +90,38 @@ public class Main2Activity extends AppCompatActivity{
 		return list2Lines;
 	}
 
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.main_menu, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()){
+			case R.id.change_state_item:
+				showDialogChangeIState();
+				break;
+			default:
+				break;
+		}
+		return true;
+	}
+
+	public void showDialogChangeIState(){
+		new MaterialDialog.Builder(Main2Activity.this)
+				.title(R.string.select)
+				.items(R.array.list_state)
+				.itemsCallback(new MaterialDialog.ListCallback() {
+					@Override
+					public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+						type = (String) text;
+						state = getState(type);
+						updateLayoutWithState();
+						list2LineAdapter.setItems(getContentList());
+						list2LineAdapter.notifyDataSetChanged();
+					}
+				})
+				.show();
+	}
 }
