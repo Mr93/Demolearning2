@@ -6,12 +6,13 @@ import android.util.Log;
 import com.example.prora.demolearning2.BackupContact;
 
 
-public class ContactState implements IState {
+public class ContactState extends IState {
 
 	Context context;
 
 	public ContactState(Context context){
 		this.context = context;
+		backupTemplate = BackupContact.getInstance(context);
 	}
 
 	@Override
@@ -22,7 +23,7 @@ public class ContactState implements IState {
 	@Override
 	public void backup() {
 		Log.d("datnd", "backup: contact backup");
-		BackupContact.getInstance(context).backup();
+		backupTemplate.backup();
 	}
 
 	@Override

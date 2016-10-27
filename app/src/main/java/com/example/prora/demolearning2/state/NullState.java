@@ -1,7 +1,7 @@
 package com.example.prora.demolearning2.state;
 
 
-public class NullState implements IState {
+public class NullState extends IState {
 
 	public NullState(){
 	}

@@ -5,12 +5,13 @@ import android.util.Log;
 
 import com.example.prora.demolearning2.BackupSms;
 
-public class SmsState implements IState {
+public class SmsState extends IState {
 
     Context context;
 
     public SmsState(Context context){
         this.context = context;
+	    backupTemplate = BackupSms.getInstance(context);
     }
 
 	@Override
@@ -21,7 +22,7 @@ public class SmsState implements IState {
 	@Override
 	public void backup() {
 		Log.d("datnd", "sms:  backup");
-        BackupSms.getInstance(context).backup();
+		backupTemplate.backup();
 	}
 
 	@Override

@@ -1,8 +1,10 @@
 package com.example.prora.demolearning2.state;
 
-public interface IState {
+import com.example.prora.demolearning2.BackupTemplate;
 
-	String getName();
-	void backup();
-	void view();
+public abstract class IState {
+	BackupTemplate backupTemplate;
+	public abstract String getName();
+	public abstract void backup();
+	public abstract void view();
 }
