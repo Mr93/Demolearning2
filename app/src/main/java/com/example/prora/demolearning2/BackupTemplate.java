@@ -21,6 +21,7 @@ public abstract class BackupTemplate {
 	String filePath = Environment.getExternalStorageDirectory().getAbsolutePath();
 
 	public BackupTemplate() {
+
 	}
 
 	public final void backup(){
@@ -38,6 +39,10 @@ public abstract class BackupTemplate {
 		if (dFile.exists()) {
 			dFile.delete();
 		}
+	}
+
+	public String getFilePath() {
+		return filePath + "/" + fileName;
 	}
 
 }

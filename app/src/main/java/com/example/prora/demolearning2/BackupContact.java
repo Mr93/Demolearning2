@@ -5,14 +5,10 @@ import android.content.res.AssetFileDescriptor;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Environment;
 import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import com.afollestad.materialdialogs.MaterialDialog;
-
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -24,21 +20,22 @@ import java.util.ArrayList;
 
 public class BackupContact extends BackupTemplate {
 
-	ArrayList<String> lCheck;
-	Cursor phones;
-	Context context;
+	private ArrayList<String> lCheck;
+	private Cursor phones;
+	private Context context;
 
 	//http://stackoverflow.com/questions/38872165/how-to-create-a-folder-for-backup-contacts-in-android
 	private static final String TAG = BackupContact.class.getName();
 	private static BackupContact instance;
-	private BackupContact(Context context) {
+
+	private BackupContact() {
 		super();
 		fileName = "Contacts.vcf";
 	}
 
 	public static BackupContact getInstance(Context context){
 		if (instance == null){
-			instance = new BackupContact(context);
+			instance = new BackupContact();
 		}
 		instance.setContext(context);
 		return instance;
@@ -75,12 +72,12 @@ public class BackupContact extends BackupTemplate {
 	}
 
 	class BackupAsync extends AsyncTask<Integer,Integer,String> {
-
 		@Override
 		protected String doInBackground(Integer... params) {
 			int count = 0;
 			AssetFileDescriptor fd;
 			String path = filePath + "/" + fileName;
+			lCheck = new ArrayList<>();
 			for (int i = 0; i < phones.getCount(); i++) {
 				String lookupKey = checkDuplicateContact();
 				if (lookupKey == null) continue;
@@ -114,16 +111,11 @@ public class BackupContact extends BackupTemplate {
 		private String checkDuplicateContact() {
 			String lookupKey = phones.getString(phones.getColumnIndex(ContactsContract.Contacts.LOOKUP_KEY));
 			lookupKey = lookupKey.trim();
-			if (lCheck == null) {
-				lCheck = new ArrayList<>();
-				lCheck.add(lookupKey);
+			if (isDuplicate(lookupKey)) {
+				phones.moveToNext();
+				return null;
 			} else {
-				if (isDuplicate(lookupKey)) {
-					phones.moveToNext();
-					return null;
-				} else {
-					lCheck.add(lookupKey);
-				}
+				lCheck.add(lookupKey);
 			}
 			return lookupKey;
 		}
@@ -142,6 +134,7 @@ public class BackupContact extends BackupTemplate {
 		@Override
 		protected void onProgressUpdate(Integer... values) {
 			super.onProgressUpdate(values);
+			Log.d(TAG, "onProgressUpdate: " + values[0]);
 			MaterialFacade.getInstance().updateDeterminateProgressDialogs(values[0]);
 		}
 	}

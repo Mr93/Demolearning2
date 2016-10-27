@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.example.prora.demolearning2.BackupContact;
+import com.example.prora.demolearning2.ViewDefault;
 
 
 public class ContactState extends IState {
@@ -13,6 +14,7 @@ public class ContactState extends IState {
 	public ContactState(Context context){
 		this.context = context;
 		backupTemplate = BackupContact.getInstance(context);
+		viewTemplate = ViewDefault.getInstances(context);
 	}
 
 	@Override
@@ -29,5 +31,6 @@ public class ContactState extends IState {
 	@Override
 	public void view() {
 		Log.d("datnd", "backup: contact view");
+		viewTemplate.view(backupTemplate.getFilePath());
 	}
 }

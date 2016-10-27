@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import com.example.prora.demolearning2.BackupSms;
+import com.example.prora.demolearning2.ViewDefault;
 
 public class SmsState extends IState {
 
@@ -12,6 +13,7 @@ public class SmsState extends IState {
     public SmsState(Context context){
         this.context = context;
 	    backupTemplate = BackupSms.getInstance(context);
+	    viewTemplate = ViewDefault.getInstances(context);
     }
 
 	@Override
@@ -28,5 +30,6 @@ public class SmsState extends IState {
 	@Override
 	public void view() {
 		Log.d("datnd", "sms : view");
+		viewTemplate.view(backupTemplate.getFilePath());
 	}
 }

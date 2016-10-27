@@ -17,5 +17,7 @@ public class NullState extends IState {
 
 	@Override
 	public void view() {
+
 	}
+
 }

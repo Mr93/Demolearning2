@@ -7,6 +7,7 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -78,6 +79,21 @@ public class MaterialFacade {
 					@Override
 					public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
 						dialog.dismiss();
+					}
+				})
+				.show();
+	}
+
+	public void showDialogChangeIState(final Context context) {
+		materialDialog = new MaterialDialog.Builder(context)
+				.title(R.string.select)
+				.items(R.array.list_state)
+				.itemsCallback(new MaterialDialog.ListCallback() {
+					@Override
+					public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+						if (text != null && !text.toString().equalsIgnoreCase("")) {
+							((Main2Activity) context).changeState(text.toString());
+						}
 					}
 				})
 				.show();
