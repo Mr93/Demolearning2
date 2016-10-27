@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Intent intent = new Intent(MainActivity.this, Main2Activity.class);
-				intent.putExtra("Strategy", label[position]);
+				intent.putExtra(getResources().getString(R.string.state), label[position]);
 				startActivity(intent);
 			}
 		});

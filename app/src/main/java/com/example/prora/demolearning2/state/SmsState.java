@@ -1,19 +1,17 @@
-package com.example.prora.demolearning2.strategy;
+package com.example.prora.demolearning2.state;
 
 import android.content.Context;
 import android.util.Log;
 
-import com.example.prora.demolearning2.BackupContact;
 import com.example.prora.demolearning2.BackupSms;
 
-import java.io.Serializable;
-
-public class SmsStrategy implements IStrategy {
+public class SmsState extends IState {
 
     Context context;
 
-    public SmsStrategy(Context context){
+    public SmsState(Context context){
         this.context = context;
+	    backupTemplate = BackupSms.getInstance(context);
     }
 
 	@Override
@@ -24,7 +22,7 @@ public class SmsStrategy implements IStrategy {
 	@Override
 	public void backup() {
 		Log.d("datnd", "sms:  backup");
-        BackupSms.getInstance(context).backup();
+		backupTemplate.backup();
 	}
 
 	@Override

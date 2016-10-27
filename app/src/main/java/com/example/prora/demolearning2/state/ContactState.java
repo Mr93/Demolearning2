@@ -1,19 +1,18 @@
-package com.example.prora.demolearning2.strategy;
+package com.example.prora.demolearning2.state;
 
 import android.content.Context;
 import android.util.Log;
 
 import com.example.prora.demolearning2.BackupContact;
 
-import java.io.Serializable;
 
-
-public class ContactStrategy implements IStrategy {
+public class ContactState extends IState {
 
 	Context context;
 
-	public ContactStrategy(Context context){
+	public ContactState(Context context){
 		this.context = context;
+		backupTemplate = BackupContact.getInstance(context);
 	}
 
 	@Override
@@ -24,7 +23,7 @@ public class ContactStrategy implements IStrategy {
 	@Override
 	public void backup() {
 		Log.d("datnd", "backup: contact backup");
-		BackupContact.getInstance(context).backup();
+		backupTemplate.backup();
 	}
 
 	@Override

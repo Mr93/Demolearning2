@@ -2,8 +2,15 @@
     <string name="app_name">Demo learning 2</string>
     <string name="backup">Backup</string>
     <string name="view">View</string>
-    <string name="contact">Contact</string>
-    <string name="Sms">SMS</string>
-    <string name="strategy">Strategy</string>
+    <string name="contact">Contacts</string>
+    <string name="Sms">Sms</string>
+    <string name="state">State</string>
     <string name="action">Action</string>
+    <string name="change_state">Change State</string>
+    <string name="select">Select</string>
+
+    <string-array name="list_state">
+        <item>@string/contact</item>
+        <item>@string/Sms</item>
+    </string-array>
 </resources>

@@ -37,7 +37,11 @@ public class List2LineAdapter extends ArrayAdapter<List2Line> {
         myTypeface = Typeface.createFromAsset(mContext.getAssets(), "fonts/Roboto_Regular.ttf");
     }
 
-    @Override
+	public void setItems(ArrayList<List2Line> items) {
+		this.items = items;
+	}
+
+	@Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View v = convertView;
         if(v == null){
