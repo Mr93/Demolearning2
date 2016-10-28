@@ -3,7 +3,16 @@ package com.example.prora.demolearning2.state;
 
 public class NullState extends IState {
 
-	public NullState(){
+	private static IState instance;
+
+	private NullState() {
+	}
+
+	public static IState getInstance() {
+		if (instance == null) {
+			instance = new NullState();
+		}
+		return instance;
 	}
 
 	@Override

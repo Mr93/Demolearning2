@@ -25,11 +25,11 @@ public class FactoryState {
 	}
 
 	public IState getState(String type){
-		IState strategy = new NullState();
+		IState strategy = NullState.getInstance();
 		if (type.equals("Contacts")){
-			strategy = new ContactState(context);
+			strategy = ContactState.getInstance(context);
 		}else if (type.equals("Sms")){
-			strategy = new SmsState(context);
+			strategy = SmsState.getInstance(context);
 		}
 		return strategy;
 	}

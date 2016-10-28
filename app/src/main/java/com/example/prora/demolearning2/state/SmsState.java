@@ -9,12 +9,20 @@ import com.example.prora.demolearning2.ViewDefault;
 public class SmsState extends IState {
 
     Context context;
+	private static IState instance;
 
-    public SmsState(Context context){
+    private SmsState(Context context){
         this.context = context;
 	    backupTemplate = BackupSms.getInstance(context);
 	    viewTemplate = ViewDefault.getInstances(context);
     }
+
+	public static IState getInstance(Context context) {
+		if (instance == null) {
+			instance = new SmsState(context);
+		}
+		return instance;
+	}
 
 	@Override
 	public String getName() {

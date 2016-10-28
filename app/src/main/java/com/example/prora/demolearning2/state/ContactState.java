@@ -10,11 +10,18 @@ import com.example.prora.demolearning2.ViewDefault;
 public class ContactState extends IState {
 
 	Context context;
-
-	public ContactState(Context context){
+	private static IState instance;
+	private ContactState(Context context){
 		this.context = context;
 		backupTemplate = BackupContact.getInstance(context);
 		viewTemplate = ViewDefault.getInstances(context);
+	}
+
+	public static IState getInstance(Context context) {
+		if (instance == null) {
+			instance = new ContactState(context);
+		}
+		return instance;
 	}
 
 	@Override

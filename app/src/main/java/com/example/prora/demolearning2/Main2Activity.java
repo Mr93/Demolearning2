@@ -20,7 +20,7 @@ import java.util.ArrayList;
 
 public class Main2Activity extends AppCompatActivity {
 
-	IState state = new NullState();
+	IState state = NullState.getInstance();
 	ListView listViewMain;
 	List2LineAdapter list2LineAdapter;
 	ArrayList<List2Line> list2Lines;
