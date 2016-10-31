@@ -25,154 +25,102 @@ import java.io.StringWriter;
 
 public class BackupSms extends BackupTemplate {
 
-	Cursor sCursor;
-	int maxSms;
-	private Context context;
-
 	private static BackupSms instance;
 	private BackupSms() {
 		super();
 		fileName = "Sms.xml";
 	}
-	public static BackupSms getInstance(Context context){
+	public static BackupSms getInstance(){
 		if (instance == null){
 			instance = new BackupSms();
 		}
-		instance.setContext(context);
 		return instance;
 	}
 
-	public void setContext(Context context) {
-		this.context = context;
-	}
-
 	@Override
-	void getData() {
+	Cursor getData() {
+		Cursor cursor;
 		if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-			sCursor = context.getContentResolver().query(Telephony.Sms.CONTENT_URI,null,null,null,null);
+			cursor = context.getContentResolver().query(Telephony.Sms.CONTENT_URI,null,null,null,null);
 		}else{
-			sCursor = context.getContentResolver().query(Uri.parse("content://sms"), null, null, null, null);
+			cursor = context.getContentResolver().query(Uri.parse("content://sms"), null, null, null, null);
 		}
+		return cursor;
 	}
 
 	@Override
-	void writeDataToFile() {
-		if(sCursor != null){
-			sCursor.moveToFirst();
-			maxSms = sCursor.getCount();
-			MaterialFacade.getInstance().getDeterminateProgressDialogs(context, maxSms, "Backup Sms");
-			new backupAsyncTask().execute();
+	byte[] writeDataToFile(Cursor cursor) {
+		XmlSerializer xmlSerializer;
+		String dataWrite = "";
+		try {
+			xmlSerializer = Xml.newSerializer();
+			StringWriter writer = new StringWriter();
+			xmlSerializer.setOutput(writer);
+			if(cursor.isFirst()){
+				xmlSerializer.startDocument("UTF-8", true);
+
+			}
+			if (cursor.getString(cursor.getColumnIndex("address")) != null) {
+				writeData(xmlSerializer, cursor);
+			}
+			if(cursor.isLast()){
+				xmlSerializer.endDocument();
+			}
+			xmlSerializer.flush();
+			dataWrite = writer.toString();
 		}
+		catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return dataWrite.getBytes();
 	}
 
-	class backupAsyncTask extends AsyncTask<Integer,Integer,String> {
-
-		@Override
-		protected String doInBackground(Integer... params) {
-			int count = 0;
-			FileOutputStream fileOutputStream = null;
-			XmlSerializer xmlSerializer;
-			String path = filePath + "/" + fileName;
-			try {
-				fileOutputStream = new FileOutputStream(new File(path), true);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			try {
-				xmlSerializer = Xml.newSerializer();
-				StringWriter writer = new StringWriter();
-				xmlSerializer.setOutput(writer);
-				xmlSerializer.startDocument("UTF-8", true);
-				xmlSerializer.startTag(null, "smsData");
-				xmlSerializer.attribute(null,"count",String.valueOf(sCursor.getCount()));
-				for (int i = 0; i < sCursor.getCount(); i++) {
-					if (sCursor.getString(sCursor.getColumnIndex("address")) != null) {
-						writeData(xmlSerializer);
-						count ++;
-						publishProgress(count);
-						sCursor.moveToNext();
-					}
-				}
-				xmlSerializer.endTag(null, "smsData");
-				xmlSerializer.endDocument();
-				xmlSerializer.flush();
-				String dataWrite = writer.toString();
-				fileOutputStream.write(dataWrite.getBytes());
-				fileOutputStream.close();
-			}
-			catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalArgumentException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IllegalStateException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			return "Backup completed";
-		}
-
-		private void writeData(XmlSerializer xmlSerializer) throws IOException {
-			xmlSerializer.startTag(null, "item");
-			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-				for(int j=0;j<sCursor.getColumnCount();j++){
-					if(sCursor.getColumnName(j).equals(Telephony.Sms.ADDRESS)||
-							sCursor.getColumnName(j).equals(Telephony.Sms._ID)||
-							sCursor.getColumnName(j).equals(Telephony.Sms.THREAD_ID)||
-							sCursor.getColumnName(j).equals(Telephony.Sms.BODY)||
-							sCursor.getColumnName(j).equals(Telephony.Sms.DATE)||
-							sCursor.getColumnName(j).equals(Telephony.Sms.TYPE)||
-							sCursor.getColumnName(j).equals(Telephony.Sms.READ)){
-						xmlSerializer.attribute(null,sCursor.getColumnName(j),(sCursor.getString(j)!=null)?sCursor.getString(j):"");
-					}
-				}
-			} else {
-				for(int j=0;j<sCursor.getColumnCount();j++){
-					if(sCursor.getColumnName(j).equals("address")||
-							sCursor.getColumnName(j).equals("date")||
-							sCursor.getColumnName(j).equals("_id")||
-							sCursor.getColumnName(j).equals("thread_id")||
-							sCursor.getColumnName(j).equals("type")||
-							sCursor.getColumnName(j).equals("read")){
-						xmlSerializer.attribute(null,sCursor.getColumnName(j),(sCursor.getString(j)!=null)?sCursor.getString(j):"");
-					}
-
-					if(sCursor.getColumnName(j).equals("body")){
-						try{
-							xmlSerializer.attribute(null,sCursor.getColumnName(j),(sCursor.getString(j) != null) ? sCursor.getString(j):"");
-						}catch (Exception e){
-							xmlSerializer.attribute(null, "body","error" );
-							Log.d("error", sCursor.getString(sCursor.getColumnIndex("body")));
-						}
-					}
-
+	private void writeData(XmlSerializer xmlSerializer, Cursor cursor) throws IOException {
+		xmlSerializer.startTag(null, "item");
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+			for(int j=0;j<cursor.getColumnCount();j++){
+				if(cursor.getColumnName(j).equals(Telephony.Sms.ADDRESS)||
+						cursor.getColumnName(j).equals(Telephony.Sms._ID)||
+						cursor.getColumnName(j).equals(Telephony.Sms.THREAD_ID)||
+						cursor.getColumnName(j).equals(Telephony.Sms.BODY)||
+						cursor.getColumnName(j).equals(Telephony.Sms.DATE)||
+						cursor.getColumnName(j).equals(Telephony.Sms.TYPE)||
+						cursor.getColumnName(j).equals(Telephony.Sms.READ)){
+					xmlSerializer.attribute(null,cursor.getColumnName(j),(cursor.getString(j)!=null)?cursor.getString(j):"");
 				}
 			}
-			xmlSerializer.endTag(null, "item");
-		}
+		} else {
+			for(int j=0;j<cursor.getColumnCount();j++){
+				if(cursor.getColumnName(j).equals("address")||
+						cursor.getColumnName(j).equals("date")||
+						cursor.getColumnName(j).equals("_id")||
+						cursor.getColumnName(j).equals("thread_id")||
+						cursor.getColumnName(j).equals("type")||
+						cursor.getColumnName(j).equals("read")){
+					xmlSerializer.attribute(null,cursor.getColumnName(j),(cursor.getString(j)!=null)?cursor.getString(j):"");
+				}
 
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
+				if(cursor.getColumnName(j).equals("body")){
+					try{
+						xmlSerializer.attribute(null,cursor.getColumnName(j),(cursor.getString(j) != null) ? cursor.getString(j):"");
+					}catch (Exception e){
+						xmlSerializer.attribute(null, "body","error" );
+						Log.d("error", cursor.getString(cursor.getColumnIndex("body")));
+					}
+				}
 
+			}
 		}
-
-		@Override
-		protected void onPostExecute(String s) {
-			super.onPostExecute(s);
-			MaterialFacade.getInstance().finishDeterminateProgressDialogs(s);
-		}
-
-		@Override
-		protected void onProgressUpdate(Integer... values) {
-			super.onProgressUpdate(values);
-			Log.d("check_value"," " + values[0]);
-			MaterialFacade.getInstance().updateDeterminateProgressDialogs(values[0]);
-		}
+		xmlSerializer.endTag(null, "item");
 	}
 }

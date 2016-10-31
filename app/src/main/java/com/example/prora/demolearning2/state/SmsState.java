@@ -13,7 +13,7 @@ public class SmsState extends IState {
 
     private SmsState(Context context){
         this.context = context;
-	    backupTemplate = BackupSms.getInstance(context);
+	    backupTemplate = BackupSms.getInstance();
 	    viewTemplate = ViewDefault.getInstances(context);
     }
 
@@ -32,7 +32,7 @@ public class SmsState extends IState {
 	@Override
 	public void backup() {
 		Log.d("datnd", "sms:  backup");
-		backupTemplate.backup();
+		backupTemplate.backup(context);
 	}
 
 	@Override

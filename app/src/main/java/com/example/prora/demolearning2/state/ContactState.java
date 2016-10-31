@@ -13,7 +13,7 @@ public class ContactState extends IState {
 	private static IState instance;
 	private ContactState(Context context){
 		this.context = context;
-		backupTemplate = BackupContact.getInstance(context);
+		backupTemplate = BackupContact.getInstance();
 		viewTemplate = ViewDefault.getInstances(context);
 	}
 
@@ -32,7 +32,7 @@ public class ContactState extends IState {
 	@Override
 	public void backup() {
 		Log.d("datnd", "backup: contact backup");
-		backupTemplate.backup();
+		backupTemplate.backup(context);
 	}
 
 	@Override

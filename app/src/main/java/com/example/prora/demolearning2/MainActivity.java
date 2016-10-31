@@ -2,6 +2,7 @@ package com.example.prora.demolearning2;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -9,10 +10,14 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.example.prora.demolearning2.adapter.List2Line;
 import com.example.prora.demolearning2.adapter.List2LineAdapter;
 
@@ -69,8 +74,7 @@ public class MainActivity extends AppCompatActivity {
 			if(ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_CONTACTS)
 					||ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_SMS)
 					||ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)){
-				MaterialFacade.getInstance().showDialogNeedPermission(this, "Permission required", "We need " +
-						"permission to backup contact + sms, pls go to setting and set permission for us");
+				showDialogPermission();
 			}else {
 				ArrayList<String> listPermission = new ArrayList<>();
 				if(permissionDenied(permissionContactCheck))listPermission.add(Manifest.permission.READ_CONTACTS);
@@ -80,6 +84,29 @@ public class MainActivity extends AppCompatActivity {
 						, PERMISSION_REQUEST);
 			}
 		}
+	}
+
+	private void showDialogPermission() {
+		MaterialBuilderFacade materialBuilderFacade = new MaterialBuilderFacade(this);
+		materialBuilderFacade.title("Permission required");
+		materialBuilderFacade.content("We need " +
+						"permission to backup contact + sms, pls go to setting and set permission for us");
+		materialBuilderFacade.autoDismiss(false);
+		materialBuilderFacade.canceledOnTouchOutside(false);
+		materialBuilderFacade.dismissListener(new DialogInterface.OnDismissListener() {
+					@Override
+					public void onDismiss(DialogInterface dialog) {
+						System.exit(0);
+					}
+				});
+		materialBuilderFacade.positiveText("Ok");
+		materialBuilderFacade.onPositive(new MaterialDialog.SingleButtonCallback() {
+					@Override
+					public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+						dialog.dismiss();
+					}
+				});
+		MaterialFacade.getInstance().showDialog(materialBuilderFacade);
 	}
 
 	private boolean permissionDenied(int value) {
