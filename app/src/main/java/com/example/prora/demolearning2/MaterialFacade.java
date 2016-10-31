@@ -33,23 +33,8 @@ public class MaterialFacade {
 		return instance;
 	}
 
-	public MaterialDialog getIndeterminateProgressDialogs(Context context){
-		return new MaterialDialog.Builder(context)
-				.title("Backup")
-				.content("Loading")
-				.progress(true, 0)
-				.show();
-	}
-
-	public void getDeterminateProgressDialogs(Context context, int max, String title){
-		materialDialog = new MaterialDialog.Builder(context)
-				.title(title)
-				.content("Loading")
-				.progress(false, max, true)
-				.autoDismiss(false)
-				.canceledOnTouchOutside(false)
-				.cancelable(false)
-				.show();
+	public void showDialog(MaterialBuilderFacade materialBuilderFacade){
+		materialDialog = materialBuilderFacade.show() ;
 	}
 
 	public void updateDeterminateProgressDialogs(final int progress){
@@ -59,43 +44,5 @@ public class MaterialFacade {
 	public void finishDeterminateProgressDialogs(String value){
 		materialDialog.setContent(value);
 		materialDialog.setCancelable(true);
-	}
-
-	public void showDialogNeedPermission(final Context context, String title, final String content){
-		materialDialog = new MaterialDialog.Builder(context)
-				.title(title)
-				.content(content)
-				.autoDismiss(false)
-				.canceledOnTouchOutside(false)
-				.dismissListener(new DialogInterface.OnDismissListener() {
-					@Override
-					public void onDismiss(DialogInterface dialog) {
-						Log.d(TAG, "onDismiss: ");
-						System.exit(0);
-					}
-				})
-				.positiveText("Ok")
-				.onPositive(new MaterialDialog.SingleButtonCallback() {
-					@Override
-					public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
-						dialog.dismiss();
-					}
-				})
-				.show();
-	}
-
-	public void showDialogChangeIState(final Context context) {
-		materialDialog = new MaterialDialog.Builder(context)
-				.title(R.string.select)
-				.items(R.array.list_state)
-				.itemsCallback(new MaterialDialog.ListCallback() {
-					@Override
-					public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
-						if (text != null && !text.toString().equalsIgnoreCase("")) {
-							((Main2Activity) context).changeState(text.toString());
-						}
-					}
-				})
-				.show();
 	}
 }

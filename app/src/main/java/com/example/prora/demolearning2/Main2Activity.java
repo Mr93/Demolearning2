@@ -100,12 +100,27 @@ public class Main2Activity extends AppCompatActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.change_state_item:
-				MaterialFacade.getInstance().showDialogChangeIState(this);
+				showDialogChangeState();
 				break;
 			default:
 				break;
 		}
 		return true;
+	}
+
+	private void showDialogChangeState() {
+		MaterialBuilderFacade materialBuilderFacade = new MaterialBuilderFacade(this);
+		materialBuilderFacade.title(R.string.select);
+		materialBuilderFacade.items(R.array.list_state);
+		materialBuilderFacade.itemsCallback(new MaterialDialog.ListCallback() {
+				@Override
+				public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
+					if (text != null && !text.toString().equalsIgnoreCase("")) {
+						changeState(text.toString());
+					}
+				}
+			});
+		MaterialFacade.getInstance().showDialog(materialBuilderFacade);
 	}
 
 	public void changeState(String text) {
