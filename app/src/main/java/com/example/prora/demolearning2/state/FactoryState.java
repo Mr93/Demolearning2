@@ -27,10 +27,10 @@ public class FactoryState {
 	public IState getState(String type){
 		IState strategy = NullState.getInstance();
 		if (type.equals("Contacts")){
-			strategy = ContactState.getInstance(context);
+		strategy = ContactState.getInstance(context);
 		}else if (type.equals("Sms")){
-			strategy = SmsState.getInstance(context);
+		strategy = SmsState.getInstance(context);
 		}
 		return strategy;
+		}
 	}
-}

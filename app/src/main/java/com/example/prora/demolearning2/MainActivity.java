@@ -2,6 +2,7 @@ package com.example.prora.demolearning2;
 
 import android.Manifest;
 import android.annotation.TargetApi;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -20,23 +21,18 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.example.prora.demolearning2.adapter.List2Line;
 import com.example.prora.demolearning2.adapter.List2LineAdapter;
+import com.example.prora.demolearning2.interfaceMVP.MVP_Main_Activity;
+import com.example.prora.demolearning2.presenter.PresenterMainActivity;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MVP_Main_Activity.RequiredViewOps {
 
 	private final int PERMISSION_REQUEST = 1;
 	ListView listViewMain;
 	List2LineAdapter list2LineAdapter;
 	ArrayList<List2Line> list2Lines;
-	String[] label = {"Contacts","Sms"};
-	String[] summary = {"Backup and restore your contacts",
-			"Backup and restore your sms"};
-	int[] idImageview = {
-			R.drawable.ic_contact_mail_black_48dp,
-			R.drawable.ic_message_text_black_48dp
-	};
-
+	MVP_Main_Activity.ProvidedPresenterOps mPresenter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -44,24 +40,19 @@ public class MainActivity extends AppCompatActivity {
 		setContentView(R.layout.activity_main);
 		getRuntimePermission();
 		listViewMain = (ListView) findViewById(R.id.listViewFirstActivity);
-		list2LineAdapter = new List2LineAdapter(MainActivity.this,R.layout.item_list_two_line_text_app,0,getContentList());
+		mPresenter = new PresenterMainActivity();
+
+		list2Lines = mPresenter.getListItems();
+		list2LineAdapter = new List2LineAdapter(MainActivity.this,R.layout.item_list_two_line_text_app,0,list2Lines);
 		listViewMain.setAdapter(list2LineAdapter);
 		listViewMain.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				Intent intent = new Intent(MainActivity.this, Main2Activity.class);
-				intent.putExtra(getResources().getString(R.string.state), label[position]);
+				intent.putExtra(getResources().getString(R.string.state), list2Lines.get(position).getLabel());
 				startActivity(intent);
 			}
 		});
-	}
-
-	private ArrayList<List2Line> getContentList (){
-		list2Lines = new ArrayList<>();
-		for(int i = 0;i<label.length;i++){
-			list2Lines.add(new List2Line(label[i],summary[i], idImageview[i]));
-		}
-		return list2Lines;
 	}
 
 	@TargetApi(23)

@@ -12,39 +12,35 @@ import android.widget.ListView;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.example.prora.demolearning2.adapter.List2Line;
 import com.example.prora.demolearning2.adapter.List2LineAdapter;
+import com.example.prora.demolearning2.interfaceMVP.MVP_Main_Activity2;
+import com.example.prora.demolearning2.presenter.PresenterMainActivity2;
 import com.example.prora.demolearning2.state.FactoryState;
 import com.example.prora.demolearning2.state.IState;
 import com.example.prora.demolearning2.state.NullState;
 
 import java.util.ArrayList;
 
-public class Main2Activity extends AppCompatActivity {
+public class Main2Activity extends AppCompatActivity implements MVP_Main_Activity2.RequiredViewOps{
 
 	IState state = NullState.getInstance();
 	ListView listViewMain;
 	List2LineAdapter list2LineAdapter;
 	ArrayList<List2Line> list2Lines;
-	String[] label = {"Backup", "View"};
-	String[] summary = {"Backup", "View"};
-	String[] rootSummary = {"Backup", "View"};
-	int[] idImageview = {
-			R.drawable.ic_backup_black_24dp,
-			R.drawable.ic_visibility_black_24dp
-	};
 	String type;
+	PresenterMainActivity2 mPresenter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main2);
-
+		mPresenter = new PresenterMainActivity2();
 		Intent intent = getIntent();
 		String key_state = getResources().getString(R.string.state);
 		if (intent.hasExtra(key_state)) {
 			type = intent.getStringExtra(key_state);
 			state = getState(type);
-			updateLayoutWithState();
 		}
+		setTitle(state.getName());
 		initListview();
 	}
 
@@ -52,18 +48,11 @@ public class Main2Activity extends AppCompatActivity {
 		return FactoryState.getInstance(this).getState(type);
 	}
 
-	private void updateLayoutWithState() {
-		if (state != null) {
-			setTitle(state.getName());
-			for (int i = 0; i < summary.length; i++) {
-				summary[i] = rootSummary[i] + " your " + type;
-			}
-		}
-	}
-
 	public void initListview() {
 		listViewMain = (ListView) findViewById(R.id.listViewFirstActivity);
-		list2LineAdapter = new List2LineAdapter(Main2Activity.this, R.layout.item_list_two_line_text_app, 0, getContentList());
+		list2Lines = mPresenter.getListItemsAction();
+		list2LineAdapter = new List2LineAdapter(Main2Activity.this, R.layout.item_list_two_line_text_app, 0, list2Lines);
+		setTextQuoteAdapter();
 		listViewMain.setAdapter(list2LineAdapter);
 		listViewMain.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
@@ -80,14 +69,6 @@ public class Main2Activity extends AppCompatActivity {
 				}
 			}
 		});
-	}
-
-	private ArrayList<List2Line> getContentList() {
-		list2Lines = new ArrayList<>();
-		for (int i = 0; i < label.length; i++) {
-			list2Lines.add(new List2Line(label[i], summary[i], idImageview[i]));
-		}
-		return list2Lines;
 	}
 
 	@Override
@@ -126,8 +107,16 @@ public class Main2Activity extends AppCompatActivity {
 	public void changeState(String text) {
 		type = text;
 		state = getState(type);
-		updateLayoutWithState();
-		list2LineAdapter.setItems(getContentList());
+
+		setTitle(state.getName());
+		list2Lines = mPresenter.getListItemsAction();
+		setTextQuoteAdapter();
+		list2LineAdapter.setItems(list2Lines);
 		list2LineAdapter.notifyDataSetChanged();
+	}
+
+	public void setTextQuoteAdapter() {
+		String textQuote = " your " + type;
+		list2LineAdapter.setTextQuote(textQuote.toLowerCase());
 	}
 }

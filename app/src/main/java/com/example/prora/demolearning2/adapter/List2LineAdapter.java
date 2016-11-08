@@ -25,7 +25,7 @@ public class List2LineAdapter extends ArrayAdapter<List2Line> {
     int layoutItem;
     int layoutParent;
     Typeface myTypeface;
-
+	String textQuote = "";
 
     public List2LineAdapter(Context Context, int TextViewResourceID, int LayoutParrent, ArrayList<List2Line> objects){
         super(Context,TextViewResourceID,objects);
@@ -62,7 +62,7 @@ public class List2LineAdapter extends ArrayAdapter<List2Line> {
                 }
                 if(txtSummary!=null){
                     if(list2Line.getSummary()!=null){
-                        txtSummary.setText(list2Line.getSummary());
+                        txtSummary.setText(list2Line.getSummary() + textQuote);
                         txtSummary.setTypeface(myTypeface);
                         txtSummary.setTextSize(14);
                     }
@@ -241,7 +241,15 @@ public class List2LineAdapter extends ArrayAdapter<List2Line> {
 
     }
 
-    private boolean isPackageInstalled(String packagename, Context context) {
+	public String getTextQuote() {
+		return textQuote;
+	}
+
+	public void setTextQuote(String textQuote) {
+		this.textQuote = textQuote;
+	}
+
+	private boolean isPackageInstalled(String packagename, Context context) {
         PackageManager pm = context.getPackageManager();
         try {
             pm.getPackageInfo(packagename, PackageManager.GET_ACTIVITIES);
