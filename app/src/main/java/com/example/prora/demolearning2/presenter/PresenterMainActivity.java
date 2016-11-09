@@ -35,4 +35,13 @@ public class PresenterMainActivity implements MVP_Main_Activity.RequiredPresente
 		return mModel.getListItems();
 	}
 
+	@Override
+	public void clickItem(String type) {
+		mModel.clickItem(type, this);
+	}
+
+	@Override
+	public Context getContext() {
+		return mView.getContext();
+	}
 }

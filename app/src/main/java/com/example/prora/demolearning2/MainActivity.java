@@ -24,6 +24,7 @@ import com.example.prora.demolearning2.adapter.List2LineAdapter;
 import com.example.prora.demolearning2.interfaceMVP.MVP_Main_Activity;
 import com.example.prora.demolearning2.presenter.PresenterMainActivity;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements MVP_Main_Activity.RequiredViewOps {
@@ -32,25 +33,25 @@ public class MainActivity extends AppCompatActivity implements MVP_Main_Activity
 	ListView listViewMain;
 	List2LineAdapter list2LineAdapter;
 	ArrayList<List2Line> list2Lines;
+	@Inject
 	MVP_Main_Activity.ProvidedPresenterOps mPresenter;
+	Context context;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		this.context = this;
 		getRuntimePermission();
 		listViewMain = (ListView) findViewById(R.id.listViewFirstActivity);
-		mPresenter = new PresenterMainActivity();
-
+		((MainApplication) getApplication()).getComponent(this).inject(this);
 		list2Lines = mPresenter.getListItems();
 		list2LineAdapter = new List2LineAdapter(MainActivity.this,R.layout.item_list_two_line_text_app,0,list2Lines);
 		listViewMain.setAdapter(list2LineAdapter);
 		listViewMain.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				Intent intent = new Intent(MainActivity.this, Main2Activity.class);
-				intent.putExtra(getResources().getString(R.string.state), list2Lines.get(position).getLabel());
-				startActivity(intent);
+				mPresenter.clickItem(list2Lines.get(position).getLabel());
 			}
 		});
 	}
@@ -134,5 +135,10 @@ public class MainActivity extends AppCompatActivity implements MVP_Main_Activity
 				return;
 			}
 		}
+	}
+
+	@Override
+	public Context getContext() {
+		return context;
 	}
 }
