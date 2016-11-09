@@ -29,6 +29,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements MVP_Main_Activity.RequiredViewOps {
 
+	private static final String TAG = MainActivity.class.getSimpleName();
 	private final int PERMISSION_REQUEST = 1;
 	ListView listViewMain;
 	List2LineAdapter list2LineAdapter;
@@ -44,7 +45,21 @@ public class MainActivity extends AppCompatActivity implements MVP_Main_Activity
 		this.context = this;
 		getRuntimePermission();
 		listViewMain = (ListView) findViewById(R.id.listViewFirstActivity);
-		((MainApplication) getApplication()).getComponent(this).inject(this);
+//		((MainApplication) getApplication()).getComponent(this).inject(this);
+		StateMainPresenter stateMainPresenter = StateMainPresenter.getInstance(MainActivity.class.getName());
+		Log.d(TAG, "onCreate: "+ MainActivity.class.getName());
+		MVP_Main_Activity.ProvidedPresenterOps providedPresenterOps = stateMainPresenter.getProvidedPresenterSaved();
+		if (providedPresenterOps == null){
+			Log.d(TAG, "onCreate: vao lan dau");
+			((MainApplication) getApplication()).getComponent(this).inject(this);
+			stateMainPresenter.setProvidedPresenterOps(mPresenter);
+		}else{
+			Log.d(TAG, "onCreate: da vao roi");
+			mPresenter = providedPresenterOps;
+			mPresenter.setView(this);
+		}
+		
+		
 		list2Lines = mPresenter.getListItems();
 		list2LineAdapter = new List2LineAdapter(MainActivity.this,R.layout.item_list_two_line_text_app,0,list2Lines);
 		listViewMain.setAdapter(list2LineAdapter);
