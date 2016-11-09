@@ -1,5 +1,6 @@
 package com.example.prora.demolearning2;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,40 +14,47 @@ import com.afollestad.materialdialogs.MaterialDialog;
 import com.example.prora.demolearning2.adapter.List2Line;
 import com.example.prora.demolearning2.adapter.List2LineAdapter;
 import com.example.prora.demolearning2.interfaceMVP.MVP_Main_Activity2;
+import com.example.prora.demolearning2.model.ModelMainActivity2;
 import com.example.prora.demolearning2.presenter.PresenterMainActivity2;
-import com.example.prora.demolearning2.state.FactoryState;
-import com.example.prora.demolearning2.state.IState;
-import com.example.prora.demolearning2.state.NullState;
 
 import java.util.ArrayList;
 
+import javax.inject.Inject;
+
 public class Main2Activity extends AppCompatActivity implements MVP_Main_Activity2.RequiredViewOps{
 
-	IState state = NullState.getInstance();
 	ListView listViewMain;
 	List2LineAdapter list2LineAdapter;
 	ArrayList<List2Line> list2Lines;
 	String type;
-	PresenterMainActivity2 mPresenter;
+	StateMainPresenter stateMainPresenter;
+	@Inject
+	MVP_Main_Activity2.ProvidedPresenterOps mPresenter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main2);
-		mPresenter = new PresenterMainActivity2();
+	}
+
+	private void createPresenter() {
+		stateMainPresenter = StateMainPresenter.getInstance(MainActivity.class.getName());
+		if(stateMainPresenter.getProvidedPresenterSavedMain2() == null){
+			((MainApplication) getApplication()).getPresenterComponentMain2(this).inject(this);
+		}else {
+			mPresenter = stateMainPresenter.getProvidedPresenterSavedMain2();
+			mPresenter.setView(this);
+		}
 		Intent intent = getIntent();
 		String key_state = getResources().getString(R.string.state);
 		if (intent.hasExtra(key_state)) {
 			type = intent.getStringExtra(key_state);
-			state = getState(type);
+			mPresenter.setState(type);
 		}
-		setTitle(state.getName());
+		setTitle(mPresenter.getStateName());
 		initListview();
 	}
 
-	private IState getState(String type) {
-		return FactoryState.getInstance(this).getState(type);
-	}
 
 	public void initListview() {
 		listViewMain = (ListView) findViewById(R.id.listViewFirstActivity);
@@ -57,16 +65,7 @@ public class Main2Activity extends AppCompatActivity implements MVP_Main_Activit
 		listViewMain.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-				switch (position) {
-					case 0:
-						state.backup();
-						break;
-					case 1:
-						state.view();
-						break;
-					default:
-						break;
-				}
+				mPresenter.clickAction(position);
 			}
 		});
 	}
@@ -81,7 +80,7 @@ public class Main2Activity extends AppCompatActivity implements MVP_Main_Activit
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 			case R.id.change_state_item:
-				showDialogChangeState();
+				mPresenter.choseChangeStateMenuItem();
 				break;
 			default:
 				break;
@@ -89,34 +88,35 @@ public class Main2Activity extends AppCompatActivity implements MVP_Main_Activit
 		return true;
 	}
 
-	private void showDialogChangeState() {
-		MaterialBuilderFacade materialBuilderFacade = new MaterialBuilderFacade(this);
-		materialBuilderFacade.title(R.string.select);
-		materialBuilderFacade.items(R.array.list_state);
-		materialBuilderFacade.itemsCallback(new MaterialDialog.ListCallback() {
-				@Override
-				public void onSelection(MaterialDialog dialog, View view, int which, CharSequence text) {
-					if (text != null && !text.toString().equalsIgnoreCase("")) {
-						changeState(text.toString());
-					}
-				}
-			});
-		MaterialFacade.getInstance().showDialog(materialBuilderFacade);
-	}
-
 	public void changeState(String text) {
 		type = text;
-		state = getState(type);
-
-		setTitle(state.getName());
+		mPresenter.setState(type);
+		setTitle(mPresenter.getStateName());
 		list2Lines = mPresenter.getListItemsAction();
 		setTextQuoteAdapter();
 		list2LineAdapter.setItems(list2Lines);
 		list2LineAdapter.notifyDataSetChanged();
 	}
 
+	@Override
+	public Context getContext() {
+		return this;
+	}
+
 	public void setTextQuoteAdapter() {
 		String textQuote = " your " + type;
 		list2LineAdapter.setTextQuote(textQuote.toLowerCase());
+	}
+
+	@Override
+	protected void onStop() {
+		super.onStop();
+		stateMainPresenter.setProvidedPresenterOpsMain2(mPresenter);
+	}
+
+	@Override
+	protected void onStart() {
+		super.onStart();
+		createPresenter();
 	}
 }

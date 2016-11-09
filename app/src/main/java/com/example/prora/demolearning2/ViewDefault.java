@@ -23,23 +23,18 @@ public class ViewDefault extends ViewTemplate {
 
 	private static final String TAG = ViewDefault.class.getName();
 	private static ViewDefault instances;
-	private Context context;
 
 	private ViewDefault() {
 
 	}
 
-	public static ViewDefault getInstances(Context context) {
+	public static ViewDefault getInstances() {
 		if (instances == null) {
 			instances = new ViewDefault();
 		}
-		instances.setContext(context);
 		return instances;
 	}
 
-	private void setContext(Context context) {
-		this.context = context;
-	}
 
 	@Override
 	void simpleView(String filePath) {

@@ -1,9 +1,9 @@
 package com.example.prora.demolearning2.presenter;
 
+import android.content.Context;
+
 import com.example.prora.demolearning2.adapter.List2Line;
-import com.example.prora.demolearning2.interfaceMVP.MVP_Main_Activity;
 import com.example.prora.demolearning2.interfaceMVP.MVP_Main_Activity2;
-import com.example.prora.demolearning2.model.ModelMainActivity;
 import com.example.prora.demolearning2.model.ModelMainActivity2;
 
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ public class PresenterMainActivity2 implements MVP_Main_Activity2.RequiredPresen
 	private MVP_Main_Activity2.ProvidedModelOps mModel;
 
 	public PresenterMainActivity2() {
-		mModel = new ModelMainActivity2();
+
 	}
 
 	@Override
@@ -35,7 +35,31 @@ public class PresenterMainActivity2 implements MVP_Main_Activity2.RequiredPresen
 
 	@Override
 	public void clickAction(int possition) {
-		mModel.clickAction(possition);
+		mModel.doAction(possition);
 	}
 
+	@Override
+	public void setState(String type) {
+		mModel.setState(type);
+	}
+
+	@Override
+	public String getStateName() {
+		return mModel.getStateName();
+	}
+
+	@Override
+	public void choseChangeStateMenuItem() {
+		mModel.showDialogChangeState();
+	}
+
+	@Override
+	public void notifyViewChangeState(String type) {
+		mView.changeState(type);
+	}
+
+	@Override
+	public Context getContext() {
+		return mView.getContext();
+	}
 }

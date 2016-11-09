@@ -8,13 +8,12 @@ public class FactoryState {
 	private static FactoryState instance;
 	Context context;
 
-	private FactoryState(Context context) {
-		this.context = context;
+	private FactoryState() {
 	}
 
 	public static FactoryState getInstance(Context context){
 		if (instance == null) {
-			instance = new FactoryState(context);
+			instance = new FactoryState();
 		}
 		instance.setContext(context);
 		return instance;

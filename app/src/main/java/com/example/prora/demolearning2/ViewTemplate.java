@@ -10,9 +10,17 @@ import android.net.Uri;
 
 public abstract class ViewTemplate {
 
+	Context context;
+
 	public final void view(String filePath) {
 		simpleView(filePath);
 	}
 
 	abstract void simpleView(String filePath);
+
+	public void setContext(Context context) {
+		this.context = context;
+	}
+
+
 }
