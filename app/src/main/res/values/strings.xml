@@ -8,8 +8,9 @@
     <string name="action">Action</string>
     <string name="change_state">Change State</string>
     <string name="select">Select</string>
-
-    <string-array name="list_state">
+	<string name="notification">Notification</string>
+	<string name="browser">Browser</string>
+	<string-array name="list_state">
         <item>@string/contact</item>
         <item>@string/Sms</item>
     </string-array>
