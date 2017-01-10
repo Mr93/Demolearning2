@@ -32,6 +32,8 @@ public class ModelMainActivity implements MVP_Main_Activity.ProvidedModelOps {
 		list2Lines = new ArrayList<>();
 		for(int i = 0;i<label.length;i++){
 			list2Lines.add(new List2Line(label[i],summary[i], idImageview[i]));
+		}for(int i = 0;i<10;i++){
+			list2Lines.add(new List2Line(label[0] + " " + i,summary[0] + " " + i, idImageview[0]));
 		}
 		return list2Lines;
 	}
