@@ -1,19 +1,25 @@
 package com.example.prora.demolearning2.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
+import android.support.test.runner.lifecycle.ActivityLifecycleMonitorRegistry;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.example.prora.demolearning2.R;
 
 import java.util.ArrayList;
+import java.util.Collection;
+
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
+import static android.support.test.runner.lifecycle.Stage.RESUMED;
 
 /**
  * Created by Dendimon on 12/17/2015.
@@ -67,172 +73,6 @@ public class List2LineAdapter extends ArrayAdapter<List2Line> {
                         txtSummary.setTextSize(14);
                     }
                 }
-//                if(imageView !=null){
-//                    if(layoutParent == 0) {
-//                        switch (position){
-//                            case 0:
-//                                imageView.setImageResource(R.drawable.ic_apps_black_24dp);
-//                                break;
-//                            case 1:
-//                                imageView.setImageResource(R.drawable.ic_contact_mail_black_24dp);
-//                                break;
-//                            case 2:
-//                                imageView.setImageResource(R.drawable.ic_message_text_black_24dp);
-//                                break;
-//                            case 3:
-//                                imageView.setImageResource(R.drawable.ic_phone_log_black_24dp);
-//                                break;
-//                            case 4:
-//                                imageView.setImageResource(R.drawable.ic_calendar_black_24dp);
-//                                break;
-//                            case 5:
-//                                imageView.setImageResource(R.drawable.ic_bookmark_black_24dp);
-//                                break;
-//                        }
-//                    }else if((layoutParent == 2)||(layoutParent == 4)){
-//                        switch (position){
-//                            case 0:
-//                                imageView.setImageResource(R.drawable.ic_content_save_black_24dp);
-//                                break;
-//                            case 1:
-//                                imageView.setImageResource(R.drawable.ic_backup_restore_black_24dp);
-//                                break;
-//                            case 2:
-//                                imageView.setImageResource(R.drawable.ic_view_list_black_24dp);
-//                                break;
-//                            case 3:
-//                                imageView.setImageResource(R.drawable.ic_cloud_upload_black_24dp);
-//                                break;
-//                            case 4:
-//                                imageView.setImageResource(R.drawable.ic_cloud_download_black_24dp);
-//                                v.setLayoutParams(new AbsListView.LayoutParams(-1,1));
-//                                v.setVisibility(View.GONE);
-//                               // v.setVisibility(View.GONE);
-//                               // position++;
-//
-//                                break;
-//                            case 5:
-//                                imageView.setImageResource(R.drawable.ic_delete_black_24dp);
-//                                break;
-//                            case 6:
-//                                imageView.setImageResource(R.drawable.ic_alert_black_24dp);
-//                                break;
-//                        }
-//                    }else if(layoutParent == 3){
-//                        switch (position){
-//                            case 0:
-//                                imageView.setImageResource(R.drawable.ic_content_save_black_24dp);
-//                                break;
-//                            case 1:
-//                                imageView.setImageResource(R.drawable.ic_message_processing_black_24dp);
-//                                break;
-//                            case 2:
-//                                imageView.setImageResource(R.drawable.ic_backup_restore_black_24dp);
-//                                break;
-//                            case 3:
-//                                imageView.setImageResource(R.drawable.ic_view_list_black_24dp);
-//                                break;
-//                            case 4:
-//                                imageView.setImageResource(R.drawable.ic_cloud_upload_black_24dp);
-//                                break;
-//                            case 5:
-//                                imageView.setImageResource(R.drawable.ic_cloud_download_black_24dp);
-//                                v.setLayoutParams(new AbsListView.LayoutParams(-1, 1));
-//                                v.setVisibility(View.GONE);
-//                                break;
-//                            case 6:
-//                                imageView.setImageResource(R.drawable.ic_delete_black_24dp);
-//                                break;
-//                            case 7:
-//                                imageView.setImageResource(R.drawable.ic_alert_black_24dp);
-//                                break;
-//                        }
-//                    }else if(layoutParent == 5){
-//                        switch (position){
-//                            case 0:
-//                                imageView.setImageResource(R.drawable.ic_content_save_black_24dp);
-//                                break;
-//                            case 1:
-//                                imageView.setImageResource(R.drawable.ic_backup_restore_black_24dp);
-//                                break;
-//                            case 2:
-//                                imageView.setImageResource(R.drawable.ic_cloud_upload_black_24dp);
-//                                break;
-//                            case 3:
-//                                imageView.setImageResource(R.drawable.ic_cloud_download_black_24dp);
-//                                v.setLayoutParams(new AbsListView.LayoutParams(-1, 1));
-//                                v.setVisibility(View.GONE);
-//                                break;
-//                            case 4:
-//                                imageView.setImageResource(R.drawable.ic_delete_black_24dp);
-//                                break;
-//                            case 5:
-//                                imageView.setImageResource(R.drawable.ic_alert_black_24dp);
-//                                break;
-//                        }
-//                    }else if(layoutParent == 6){
-//                        if(isPackageInstalled("com.android.chrome",mContext)){
-//                            switch (position){
-//                                case 0:
-//                                    imageView.setImageResource(R.drawable.ic_content_save_black_24dp);
-//                                    break;
-//                                case 1:
-//                                    imageView.setImageResource(R.drawable.ic_backup_restore_black_24dp);
-//                                    break;
-//                                case 2:
-//                                    imageView.setImageResource(R.drawable.ic_google_chrome_black_24dp);
-//                                    break;
-//                                case 3:
-//                                    imageView.setImageResource(R.drawable.ic_view_list_black_24dp);
-//                                    break;
-//                                case 4:
-//                                    imageView.setImageResource(R.drawable.ic_cloud_upload_black_24dp);
-//                                    break;
-//                                case 5:
-//                                    imageView.setImageResource(R.drawable.ic_cloud_download_black_24dp);
-//                                    v.setLayoutParams(new AbsListView.LayoutParams(-1, 1));
-//                                    v.setVisibility(View.GONE);
-//                                    break;
-//                                case 6:
-//                                    imageView.setImageResource(R.drawable.ic_delete_black_24dp);
-//                                    break;
-//                                case 7:
-//                                    imageView.setImageResource(R.drawable.ic_alert_black_24dp);
-//                                    break;
-//                            }
-//                        }else {
-//                            switch (position){
-//                                case 0:
-//                                    imageView.setImageResource(R.drawable.ic_content_save_black_24dp);
-//                                    break;
-//                                case 1:
-//                                    imageView.setImageResource(R.drawable.ic_backup_restore_black_24dp);
-//                                    break;
-//                                case 2:
-//                                    imageView.setImageResource(R.drawable.ic_view_list_black_24dp);
-//                                    break;
-//                                case 3:
-//                                    imageView.setImageResource(R.drawable.ic_cloud_upload_black_24dp);
-//                                    break;
-//                                case 4:
-//                                    imageView.setImageResource(R.drawable.ic_cloud_download_black_24dp);
-//
-//                                    //hide item
-//                                    v.setLayoutParams(new AbsListView.LayoutParams(-1, 1));
-//                                   // v.set
-//                                    v.setVisibility(View.GONE);
-//                                    break;
-//                                case 5:
-//                                    imageView.setImageResource(R.drawable.ic_delete_black_24dp);
-//                                    break;
-//                                case 6:
-//                                    imageView.setImageResource(R.drawable.ic_alert_black_24dp);
-//                                    break;
-//                            }
-//                        }
-//                    }
-//
-//                }
 				imageView.setImageResource(list2Line.getIdImageView());
             }
         }
@@ -240,6 +80,7 @@ public class List2LineAdapter extends ArrayAdapter<List2Line> {
         return v;
 
     }
+
 
 	public String getTextQuote() {
 		return textQuote;
